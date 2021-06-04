@@ -8,7 +8,7 @@ This plugin allows you to easily convert your markdown files using pandoc. It us
 
 Packer:
 
-```
+```Lua
 use {
   'jghauser/auto-pandoc.nvim',
   config = function()
@@ -21,7 +21,7 @@ use {
 
 I add the following keymap in my `markdown.vim`. Adapt to your preferences.
 
-```
+```VimL
 nnoremap <buffer><silent> go :w<bar>lua require('auto-pandoc').run_pandoc()<cr>
 ```
 
@@ -29,7 +29,7 @@ nnoremap <buffer><silent> go :w<bar>lua require('auto-pandoc').run_pandoc()<cr>
 
 Use a `pandoc_` key in the yaml block to set pandoc options. The `to` field defines the output format, other fields follow the naming convention of the pandoc cli program.
 
-```
+```yaml
 ---
 pandoc_:
   - to: pdf
