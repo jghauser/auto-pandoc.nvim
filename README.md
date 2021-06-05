@@ -1,7 +1,5 @@
 # auto-pandoc.nvim
 
-**WIP**
-
 This plugin allows you to easily convert your markdown files using pandoc. It uses a custom key in the yaml block at the beginning of the markdown file to set pandoc settings. Converting your file then just requires running the supplied command (see below under configuration). This allows for quickly updating the file without having to supply file formats and other settings.
 
 ## Installation
