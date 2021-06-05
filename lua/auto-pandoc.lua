@@ -1,5 +1,5 @@
 --
--- PANDOC AUTO
+-- AUTO PANDOC
 --
 
 local fn = vim.fn
@@ -37,18 +37,19 @@ function M.run_pandoc()
     print('Pandoc yaml block missing!')
     return
   end
-  loop.spawn('pandoc', {
-    args = get_args()
-  },
-  function()
-    print('Pandoc conversion complete')
-  end
-  )
-end
-
-function M.print_command()
+  local Job = require('plenary.job')
   local args = get_args()
-  print(vim.inspect(args))
+  Job:new({
+    command = 'pandoc',
+    args = args,
+    on_exit = function(j, return_val)
+      if return_val == 0 then
+        print('Pandoc conversion complete')
+      else
+        print('Pandoc conversion error: ' .. j:stderr_result()[1])
+      end
+    end,
+  }):start()
 end
 
 return M

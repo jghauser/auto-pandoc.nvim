@@ -6,11 +6,14 @@ This plugin allows you to easily convert your markdown files using pandoc. It us
 
 ## Installation
 
+This plugin requires [plenary.nvim](https://github.com/nvim-lua/plenary.nvim) to be installed.
+
 Packer:
 
 ```lua
 use {
   'jghauser/auto-pandoc.nvim',
+  requires = 'nvim-lua/plenary.nvim',
   config = function()
     require('auto-pandoc')
   end
@@ -36,7 +39,3 @@ pandoc_:
   - defaults: academic
 ---
 ```
-
-## TODO
-
-- Use plenary for running jobs. Give feedback when pandoc conversion fails.
