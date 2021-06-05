@@ -41,4 +41,3 @@ pandoc_:
 ## Todo/limitations
 
 - Plugin doesn't currently deal well with spaces in file and directory names.
-- 
