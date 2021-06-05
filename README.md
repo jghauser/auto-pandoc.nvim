@@ -8,7 +8,7 @@ This plugin allows you to easily convert your markdown files using pandoc. It us
 
 Packer:
 
-```Lua
+```lua
 use {
   'jghauser/auto-pandoc.nvim',
   config = function()
@@ -19,9 +19,9 @@ use {
 
 ## Configuration
 
-I add the following keymap in my `markdown.vim`. Adapt to your preferences.
+I added the following keymap to my `ftplugin/markdown.vim`. It will save the file and execute pandoc on `go`. Adapt to your preferences.
 
-```VimL
+```viml
 nnoremap <buffer><silent> go :w<bar>lua require('auto-pandoc').run_pandoc()<cr>
 ```
 
