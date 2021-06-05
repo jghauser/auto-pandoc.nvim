@@ -3,7 +3,6 @@
 --
 
 local fn = vim.fn
-local loop = vim.loop
 local api = vim.api
 
 M = {}
