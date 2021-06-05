@@ -28,7 +28,7 @@ nnoremap <buffer><silent> go :w<bar>lua require('auto-pandoc').run_pandoc()<cr>
 
 ## Use
 
-Use a `pandoc_` key in the yaml block to set pandoc options. The `to` field defines the output format, other fields follow the naming convention of the pandoc cli program.
+Use the `pandoc_` key in the yaml block to set options supplied to the pandoc command. The `to` field defines the output format, other fields follow the naming convention of the pandoc cli program.
 
 ```yaml
 ---
