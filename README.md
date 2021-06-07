@@ -23,7 +23,7 @@ use {
 I added the following keymap to my `ftplugin/markdown.vim`. It will save the file and execute pandoc on `go`. Adapt to your preferences.
 
 ```viml
-nnoremap <buffer><silent> go :w<bar>lua require('auto-pandoc').run_pandoc()<cr>
+nnoremap <buffer><silent> go :silent w<bar>lua require('auto-pandoc').run_pandoc()<cr>
 ```
 
 ## Use
