@@ -4,7 +4,7 @@ This plugin allows you to easily convert your markdown files using pandoc. It us
 
 ## Installation
 
-This plugin requires [plenary.nvim](https://github.com/nvim-lua/plenary.nvim) to be installed.
+This plugin requires neovim 0.5 and depends on the plugin [plenary.nvim](https://github.com/nvim-lua/plenary.nvim).
 
 Packer:
 
@@ -20,10 +20,10 @@ use {
 
 ## Configuration
 
-I added the following keymap to my `ftplugin/markdown.vim`. It will save the file and execute pandoc on `go`. Adapt to your preferences.
+I added the following keymap to my `ftplugin/markdown.lua`. It will save the file and execute pandoc on `go`. Adapt to your preferences.
 
-```viml
-nnoremap <buffer><silent> go :silent w<bar>lua require('auto-pandoc').run_pandoc()<cr>
+```lua
+vim.api.nvim_buf_set_keymap('0', 'n', 'go', ':silent w<bar>lua require("auto-pandoc").run_pandoc()<cr>', {noremap = true, silent = true})
 ```
 
 ## Use
