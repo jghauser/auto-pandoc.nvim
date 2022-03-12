@@ -28,7 +28,9 @@ vim.api.nvim_buf_set_keymap('0', 'n', 'go', ':silent w<bar>lua require("auto-pan
 
 ## Use
 
-Use the `pandoc_` key in the yaml block to set options supplied to the pandoc command. The `to` field defines the output format, other fields follow the naming convention of the pandoc cli program.
+Use the `pandoc_` key in the yaml block to set options supplied to the pandoc command. The only deviation from the conventions of the pandoc cli program is the `output` field. You can either set it to your desired filename (in which case it works exactly like pandoc's `--output`) or you can set it to the filename extension prepended by a '.' (e.g. '.pdf'). In that case, auto-pandoc will pass an `--output` value to pandoc that is the current filename with the extension swapped out (e.g. 'my_file.md' will generate a 'my_file.pdf').
+
+Boolean options must be set to true/false (e.g. `option: true` instead of just `option`).
 
 ```yaml
 ---

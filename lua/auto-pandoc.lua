@@ -4,6 +4,7 @@
 
 local fn = vim.fn
 local api = vim.api
+local cmd = vim.cmd
 
 M = {}
 
@@ -19,7 +20,10 @@ local function get_args()
     parameters[key] = value
   end
   api.nvim_win_set_cursor(0, cur_pos)
-  local args = {'--output=' .. fn.expand([[%:p:r]]) .. '.' .. parameters['to']}
+  local args = {}
+  if parameters['output']:sub(1,1) == '.' then
+    parameters['output'] = fn.expand([[%:p:r]]) .. parameters['output']
+  end
   for k,v in pairs(parameters) do
     if v == 'true' then
       table.insert(args, '--' .. k)
