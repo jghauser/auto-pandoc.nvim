@@ -35,7 +35,7 @@ Boolean options must be set to true/false (e.g. `option: true` instead of just `
 ```yaml
 ---
 pandoc_:
-  - to: pdf
+  - output: .pdf
   - defaults: academic
 ---
 ```

@@ -36,6 +36,9 @@ local function get_args()
 end
 
 function M.run_pandoc()
+  local cwd = fn.getcwd()
+  cmd[[:cd %:p:h]]
+  os.execute("cd")
   if fn.search([[^pandoc_:$]], 'n') == 0 then
     print('Pandoc yaml block missing!')
     return
@@ -53,6 +56,7 @@ function M.run_pandoc()
       end
     end,
   }):start()
+  cmd(':cd ' .. cwd)
 end
 
 return M
