@@ -40,7 +40,7 @@ function M.run_pandoc()
 	cmd([[:cd %:p:h]])
 	os.execute("cd")
 	if fn.search([[^pandoc_:$]], "n") == 0 then
-		print("Pandoc yaml block missing!")
+		vim.notify("Pandoc yaml block missing!")
 		return
 	end
 	local Job = require("plenary.job")
@@ -50,9 +50,9 @@ function M.run_pandoc()
 		args = args,
 		on_exit = function(j, return_val)
 			if return_val == 0 then
-				print("Pandoc conversion complete")
+				vim.notify("Pandoc conversion complete")
 			else
-				print("Pandoc conversion error: " .. j:stderr_result()[1])
+				vim.notify("Pandoc conversion error: " .. j:stderr_result()[1])
 			end
 		end,
 	}):start()
