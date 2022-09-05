@@ -6,6 +6,14 @@ local fn = vim.fn
 local api = vim.api
 local cmd = vim.cmd
 
+local function on_exit(job_id, code, _)
+	if code == 0 then
+		vim.notify("Pandoc conversion complete")
+	else
+		vim.notify("Pandoc conversion error: " .. job_id:stderr_result()[1])
+	end
+end
+
 M = {}
 
 local function get_args()
@@ -42,19 +50,15 @@ function M.run_pandoc()
 	if fn.search([[^pandoc_:$]], "n") == 0 then
 		vim.notify("Pandoc yaml block missing!")
 		return
+	else
+		vim.notify("Pandoc conversion started")
 	end
 	local Job = require("plenary.job")
 	local args = get_args()
 	Job:new({
 		command = "pandoc",
 		args = args,
-		on_exit = function(j, return_val)
-			if return_val == 0 then
-				vim.notify("Pandoc conversion complete")
-			else
-				vim.notify("Pandoc conversion error: " .. j:stderr_result()[1])
-			end
-		end,
+		on_exit = on_exit,
 	}):start()
 	cmd(":cd " .. cwd)
 end
