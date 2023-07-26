@@ -23,7 +23,9 @@ use {
 I added the following keymap to my `ftplugin/markdown.lua`. It will save the file and execute pandoc on `go`. Adapt to your preferences.
 
 ```lua
-vim.api.nvim_buf_set_keymap('0', 'n', 'go', ':silent w<bar>lua require("auto-pandoc").run_pandoc()<cr>', {noremap = true, silent = true})
+vim.keymap.set("n", "go", function()
+  require("auto-pandoc").run_pandoc()
+end, { silent = true, buffer = 0 })
 ```
 
 ## Use
