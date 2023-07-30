@@ -12,20 +12,33 @@ Packer:
 use {
   'jghauser/auto-pandoc.nvim',
   requires = 'nvim-lua/plenary.nvim',
-  config = function()
-    require('auto-pandoc')
-  end
+}
+```
+
+Lazy.nvim
+```lua
+{
+    "jghauser/auto-pandoc.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    ft = "markdown",
 }
 ```
 
 ## Configuration
 
-I added the following keymap to my `ftplugin/markdown.lua`. It will save the file and execute pandoc on `go`. Adapt to your preferences.
+The plugin provides the `run_pandoc()` function that will execute pandoc. For convencience sake, it's useful to add a keymap for it. The following snippet will add a keymap for markdown files so that `go` executes pandoc (in normal mode). Adapt to your preferences.
 
 ```lua
-vim.keymap.set("n", "go", function()
-  require("auto-pandoc").run_pandoc()
-end, { silent = true, buffer = 0 })
+vim.api.nvim_create_autocmd("BufEnter", {
+  pattern = "*.md",
+  callback = function()
+    keymap.set("n", "go", function()
+      require("auto-pandoc").run_pandoc()
+    end, { silent = true, buffer = 0 })
+  end,
+  group = vim.api.nvim_create_augroup("setAutoPandocKeymap", {}),
+  desc = "Set keymap for auto-pandoc",
+})
 ```
 
 ## Use
