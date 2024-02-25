@@ -51,7 +51,7 @@ Boolean options must be set to true/false (e.g. `option: true` instead of just `
 ---
 pandoc_:
   - output: .pdf
-  - defaults: academic
+  - defaults: academic # this is just an example option, adapt to your preference
 ---
 ```
 
