@@ -57,4 +57,5 @@ pandoc_:
 
 ## Todo/limitations
 
-- Plugin doesn't currently deal well with spaces in file and directory names.
+- The plugin doesn't currently deal well with spaces in file and directory names.
+- The plugin only processes YAML configurations that are a single level deep. If you want to set something like `--variables key=val1`, please use a [Pandoc `defaults` file](https://pandoc.org/chunkedhtml-demo/5-defaults-files.html) (see [related issue](https://github.com/jghauser/auto-pandoc.nvim/issues/5)).
