@@ -7,11 +7,13 @@ local api = vim.api
 local cmd = vim.cmd
 
 local function on_exit(job_id, code, _)
-	if code == 0 then
-		vim.notify("Pandoc conversion complete")
-	else
-		vim.notify("Pandoc conversion error: " .. job_id:stderr_result()[1])
-	end
+  vim.schedule(function()
+    if code == 0 then
+      vim.notify("Pandoc conversion complete")
+    else
+      vim.notify("Pandoc conversion error: " .. job_id:stderr_result()[1])
+    end
+  end)
 end
 
 M = {}
