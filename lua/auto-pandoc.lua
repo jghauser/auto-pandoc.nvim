@@ -9,11 +9,13 @@ local cmd = vim.cmd
 local ERROR = vim.log.levels.ERROR
 
 local function on_exit(job_id, code, _)
-	if code == 0 then
-		vim.notify("Pandoc conversion complete")
-	else
-		vim.notify("Pandoc conversion error: " .. job_id:stderr_result()[1], ERROR)
-	end
+  vim.schedule(function()
+    if code == 0 then
+      vim.notify("Pandoc conversion complete")
+    else
+      vim.notify("Pandoc conversion error: " .. job_id:stderr_result()[1], ERROR)
+    end
+  end)
 end
 
 M = {}
