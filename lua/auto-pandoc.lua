@@ -25,25 +25,45 @@ local function trim(s)
 	return (s:gsub("^%s*(.-)%s*$", "%1"))
 end
 
+---@param lines string[]
+---@return number indent size of indent, error(-1)
+local function get_yaml_indent(lines)
+    local indent_size = 1000000
+    for _, line in ipairs(lines) do
+        local indent_pos, _ = string.find(line, "%S")
+        if indent_pos == nil then
+            vim.notify("[auto-pandoc] yaml empty line:\n" .. line, ERROR)
+            return -1
+        end
+        if line:sub(indent_pos, indent_pos) == "#" then
+             -- comment line, success
+        else
+            -- find the smallest indent in yaml
+            local local_indent_size = (indent_pos - 1)
+            if indent_size > local_indent_size then
+                indent_size = local_indent_size
+            end
+        end
+    end
+    return indent_size
+end
+
 ---@param params table
 ---@param line string
-local function parse_line(params, line)
+---@param indent_size number
+local function parse_line(params, line, indent_size)
 	local indent_pos, _ = string.find(line, "%S")
-	if indent_pos == nil then
-		vim.notify("[auto-pandoc] yaml empty line:\n" .. line, ERROR)
-		return
-	end
-	if line:sub(indent_pos, indent_pos) == "#" then
+	if indent_pos and line:sub(indent_pos, indent_pos) == "#" then
 		return -- comment line, success
 	end
 
-	local indent = (indent_pos - 1) / 2
-	if indent % 1 ~= 0 then
+	local indent_level = (indent_pos - 1) / indent_size
+	if indent_level % 1 ~= 0 then -- make sure it is an integer
 		vim.notify("[auto-pandoc] YAML indentation error:\n" .. line, ERROR)
 		return
 	end
 
-	if indent ~= 1 then
+	if indent_level ~= 1 then
 		vim.notify("[auto-pandoc] only support indentation level of 1 for now:\n" .. line, ERROR)
 		return
 	end
@@ -55,6 +75,11 @@ local function parse_line(params, line)
 	if key:sub(1, 2) == "- " then
 		key = key:sub(3)
 	end
+    -- remove inline comments
+    if value:find("#") ~= nil then
+        local comment_pos, _ = value:find("#")
+        value = value:sub(1, comment_pos - 1)
+    end
 	value = trim(value)
 	params[key] = value
 end
@@ -64,9 +89,13 @@ local function get_args()
 	local lnr_from = fn.search([[^pandoc_:$]])
 	local lnr_until = fn.search([[^\S]]) - 1
 	local lines = api.nvim_buf_get_lines(0, lnr_from, lnr_until, true)
+    local indent_size = get_yaml_indent(lines)
+    if indent_size == -1 then
+        return {}
+    end
 	local parameters = {}
 	for _, v in ipairs(lines) do
-		parse_line(parameters, v)
+		parse_line(parameters, v, indent_size)
 	end
 	api.nvim_win_set_cursor(0, cur_pos)
 	local args = {}
@@ -100,6 +129,9 @@ function M.run_pandoc()
 	end
 	local Job = require("plenary.job")
 	local args = get_args()
+    if (#args == 0) then
+        return
+    end
 	Job:new({
 		command = "pandoc",
 		args = args,
