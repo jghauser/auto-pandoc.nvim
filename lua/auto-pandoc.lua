@@ -107,7 +107,7 @@ local function get_args()
   local args = {}
   if parameters["output"] == nil then
     vim.notify("auto-pandoc: field `output` not specified, export failed", ERROR)
-    return {}
+    return
   end
   if parameters["output"]:sub(1, 1) == "." then
     parameters["output"] = fn.expand([[%:p:r]]) .. parameters["output"]
@@ -135,14 +135,14 @@ function M.run_pandoc()
   end
   local Job = require("plenary.job")
   local args = get_args()
-  if (#args == 0) then
-    return
+  if args then
+    vim.notify("auto-pandoc: conversion started")
+    Job:new({
+      command = "pandoc",
+      args = args,
+      on_exit = on_exit,
+    }):start()
   end
-  Job:new({
-    command = "pandoc",
-    args = args,
-    on_exit = on_exit,
-  }):start()
   cmd(":cd " .. cwd)
 end
 
