@@ -85,9 +85,15 @@ local function parse_line(line, indent_size)
   return { key = key, value = value }
 end
 
+---Gets arguments from the YAML header and gives errors when options aren't correct
+---@return table|nil #Table if success, nil otherwise
 local function get_args()
   local cur_pos = api.nvim_win_get_cursor(0)
   local lnr_from = fn.search([[^pandoc_:$]])
+  if lnr_from == 0 then
+    vim.notify("auto-pandoc: options missing!", ERROR)
+    return
+  end
   local lnr_until = fn.search([[^\S]]) - 1
   local lines = api.nvim_buf_get_lines(0, lnr_from, lnr_until, true)
   local indent_size = get_yaml_indent(lines)
@@ -123,16 +129,11 @@ local function get_args()
   return args
 end
 
+---Main function to run pandoc
 function M.run_pandoc()
   local cwd = fn.getcwd()
   cmd([[:cd %:p:h]])
   os.execute("cd")
-  if fn.search([[^pandoc_:$]], "n") == 0 then
-    vim.notify("auto-pandoc: YAML options missing!", ERROR)
-    return
-  else
-    vim.notify("auto-pandoc: conversion started")
-  end
   local Job = require("plenary.job")
   local args = get_args()
   if args then
