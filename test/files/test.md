@@ -1,7 +1,7 @@
 ---
 title: "A title"
 pandoc_:
-  - output: ~/.cache/auto-pandoc/out.pdf
+  - output: .pdf
 ---
 
 This is a test document.
