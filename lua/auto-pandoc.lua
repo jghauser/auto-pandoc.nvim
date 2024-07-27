@@ -26,14 +26,14 @@ local function trim(s)
 end
 
 ---@param lines string[]
----@return number indent size of indent, error(-1)
+---@return number|nil #size of indent or nil if error
 local function get_yaml_indent(lines)
   local indent_size = 1000000
   for _, line in ipairs(lines) do
     local indent_pos, _ = string.find(line, "%S")
     if indent_pos == nil then
       vim.notify("auto-pandoc: empty line in YAML header:\n" .. line, ERROR)
-      return -1
+      return
     end
     if line:sub(indent_pos, indent_pos) == "#" then
       -- comment line, success
@@ -90,8 +90,8 @@ local function get_args()
   local lnr_until = fn.search([[^\S]]) - 1
   local lines = api.nvim_buf_get_lines(0, lnr_from, lnr_until, true)
   local indent_size = get_yaml_indent(lines)
-  if indent_size == -1 then
-    return {}
+  if not indent_size then
+    return
   end
   local parameters = {}
   for _, v in ipairs(lines) do
