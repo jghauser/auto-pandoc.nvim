@@ -48,10 +48,11 @@ local function get_yaml_indent(lines)
   return indent_size
 end
 
----@param params table
----@param line string
----@param indent_size number
-local function parse_line(params, line, indent_size)
+---Parses a line of the YAML header
+---@param line string #Line to parse
+---@param indent_size number #Size of indent
+---@return table|nil #Table if success, nil otherwise
+local function parse_line(line, indent_size)
   local indent_pos, _ = string.find(line, "%S")
   if indent_pos and line:sub(indent_pos, indent_pos) == "#" then
     return -- comment line, success
@@ -81,7 +82,7 @@ local function parse_line(params, line, indent_size)
     value = value:sub(1, comment_pos - 1)
   end
   value = trim(value)
-  params[key] = value
+  return { key = key, value = value }
 end
 
 local function get_args()
@@ -95,7 +96,12 @@ local function get_args()
   end
   local parameters = {}
   for _, v in ipairs(lines) do
-    parse_line(parameters, v, indent_size)
+    local key_value = parse_line(v, indent_size)
+    if key_value then
+      parameters[key_value.key] = key_value.value
+    else
+      return
+    end
   end
   api.nvim_win_set_cursor(0, cur_pos)
   local args = {}
