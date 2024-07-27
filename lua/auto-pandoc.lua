@@ -20,9 +20,9 @@ end
 
 M = {}
 
----@param s string
-local function trim(s)
-  return (s:gsub("^%s*(.-)%s*$", "%1"))
+---@param string string
+local function trim(string)
+  return (string:gsub("^%s*(.-)%s*$", "%1"))
 end
 
 ---@param lines string[]
