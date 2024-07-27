@@ -11,9 +11,9 @@ local ERROR = vim.log.levels.ERROR
 local function on_exit(job_id, code, _)
   vim.schedule(function()
     if code == 0 then
-      vim.notify("Pandoc conversion complete")
+      vim.notify("auto-pandoc: conversion complete")
     else
-      vim.notify("Pandoc conversion error: " .. job_id:stderr_result()[1], ERROR)
+      vim.notify("auto-pandoc: conversion error: " .. job_id:stderr_result()[1], ERROR)
     end
   end)
 end
@@ -32,7 +32,7 @@ local function get_yaml_indent(lines)
   for _, line in ipairs(lines) do
     local indent_pos, _ = string.find(line, "%S")
     if indent_pos == nil then
-      vim.notify("[auto-pandoc] yaml empty line:\n" .. line, ERROR)
+      vim.notify("auto-pandoc: empty line in YAML header:\n" .. line, ERROR)
       return -1
     end
     if line:sub(indent_pos, indent_pos) == "#" then
@@ -59,12 +59,12 @@ local function parse_line(params, line, indent_size)
 
   local indent_level = (indent_pos - 1) / indent_size
   if indent_level % 1 ~= 0 then -- make sure it is an integer
-    vim.notify("[auto-pandoc] YAML indentation error:\n" .. line, ERROR)
+    vim.notify("auto-pandoc: YAML indentation error:\n" .. line, ERROR)
     return
   end
 
   if indent_level ~= 1 then
-    vim.notify("[auto-pandoc] only support indentation level of 1 for now:\n" .. line, ERROR)
+    vim.notify("auto-pandoc: indentation levels above 1 are unsupported:\n" .. line, ERROR)
     return
   end
 
@@ -100,7 +100,7 @@ local function get_args()
   api.nvim_win_set_cursor(0, cur_pos)
   local args = {}
   if parameters["output"] == nil then
-    vim.notify("Field `output` not specified, export failed", ERROR)
+    vim.notify("auto-pandoc: field `output` not specified, export failed", ERROR)
     return {}
   end
   if parameters["output"]:sub(1, 1) == "." then
@@ -122,10 +122,10 @@ function M.run_pandoc()
   cmd([[:cd %:p:h]])
   os.execute("cd")
   if fn.search([[^pandoc_:$]], "n") == 0 then
-    vim.notify("Pandoc yaml block missing!", ERROR)
+    vim.notify("auto-pandoc: YAML options missing!", ERROR)
     return
   else
-    vim.notify("Pandoc conversion started")
+    vim.notify("auto-pandoc: conversion started")
   end
   local Job = require("plenary.job")
   local args = get_args()
