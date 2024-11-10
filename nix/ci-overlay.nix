@@ -17,8 +17,6 @@
           (nvim-treesitter.withPlugins (ps:
             with ps; [
               tree-sitter-yaml
-              tree-sitter-markdown
-              tree-sitter-markdown-inline
             ]))
         ];
       };
