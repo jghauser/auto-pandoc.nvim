@@ -4,14 +4,11 @@ This plugin allows you to easily convert your markdown files using pandoc. It us
 
 ## Installation
 
-This plugin requires neovim 0.5 and depends on the plugin [plenary.nvim](https://github.com/nvim-lua/plenary.nvim).
-
 Packer:
 
 ```lua
 use {
   'jghauser/auto-pandoc.nvim',
-  requires = 'nvim-lua/plenary.nvim',
 }
 ```
 
@@ -19,7 +16,6 @@ Lazy.nvim
 ```lua
 {
     "jghauser/auto-pandoc.nvim",
-    dependencies = { "nvim-lua/plenary.nvim" },
     ft = "markdown",
 }
 ```

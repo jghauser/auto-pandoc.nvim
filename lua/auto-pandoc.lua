@@ -8,16 +8,6 @@ local cmd = vim.cmd
 
 local ERROR = vim.log.levels.ERROR
 
-local function on_exit(job_id, code, _)
-  vim.schedule(function()
-    if code == 0 then
-      vim.notify("auto-pandoc: conversion complete")
-    else
-      vim.notify("auto-pandoc: conversion error: " .. job_id:stderr_result()[1], ERROR)
-    end
-  end)
-end
-
 M = {}
 
 ---@param string string
@@ -134,15 +124,23 @@ function M.run_pandoc()
   local cwd = fn.getcwd()
   cmd([[:cd %:p:h]])
   os.execute("cd")
-  local Job = require("plenary.job")
   local args = get_args()
   if args then
     vim.notify("auto-pandoc: conversion started")
-    Job:new({
-      command = "pandoc",
-      args = args,
-      on_exit = on_exit,
-    }):start()
+    vim.system(
+      { "pandoc", unpack(args) },
+      {},
+      function(result)
+        vim.schedule(function()
+          if result.code == 0 then
+            vim.notify("auto-pandoc: conversion complete")
+          else
+            local err_msg = result.stderr and result.stderr:match("[^\r\n]+") or "unknown error"
+            vim.notify("auto-pandoc: conversion error: " .. err_msg, ERROR)
+          end
+        end)
+      end
+    )
   end
   cmd(":cd " .. cwd)
 end
